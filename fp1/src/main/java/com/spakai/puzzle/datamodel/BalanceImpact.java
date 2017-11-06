@@ -1,16 +1,16 @@
 package com.spakai.puzzle.datamodel;
 
 public class BalanceImpact {
-    private String BalanceDetail;
+    private BalanceDetail balanceDetail;
     private String amount;
     private String clearReservationAmount;
 
-    public String getBalanceDetail() {
-        return BalanceDetail;
+    public BalanceDetail getBalanceDetail() {
+        return balanceDetail;
     }
 
-    public void setBalanceDetail(String BalanceDetail) {
-        this.BalanceDetail = BalanceDetail;
+    public void setBalanceDetail(BalanceDetail balanceDetail) {
+        this.balanceDetail = balanceDetail;
     }
 
     public String getAmount() {
