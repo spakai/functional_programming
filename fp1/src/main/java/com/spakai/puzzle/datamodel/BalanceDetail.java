@@ -1,4 +1,4 @@
-package com.spakai.fp1.datamodel;
+package com.spakai.puzzle.datamodel;
 
 public class BalanceDetail {
     private String subscriberId;
