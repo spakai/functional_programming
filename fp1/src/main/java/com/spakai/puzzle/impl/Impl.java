@@ -21,11 +21,18 @@ public class Impl {
                                              bi -> createBalanceReservationR(bi)
                                      ));
        
-        
-        /*Map<String, Map<String, BalanceReservation>> balanceCommitsWithSubscriberId 
+        //Map<String, Map<String, BalanceReservation>> balanceCommitsWithSubscriberId 
+        /*Map<String, BalanceReservation>> balanceCommitsWithSubscriberId 
                 = commitBalanceImpacts
                         .stream()
-                        .map(bi -> balReservations.getOrDefault(bi.getBalanceDetail().getBalanceId()))*/
+                        .map(bi -> balReservations.getOrDefault(bi.getBalanceDetail().getBalanceId(), createBalanceReservationC(bi)))
+                        .map(br -> updateBalanceReservation(br))
+
+*/
+                
+                
+                
+                        
         
         
     }
@@ -35,6 +42,14 @@ public class Impl {
         BalanceReservation br = new BalanceReservation();
         br.setBalanceId(bi.getBalanceDetail().getBalanceId());
         br.setReservationAmount(bi.getAmount());
+        return br;
+    }
+    
+     private BalanceReservation createBalanceReservationC(BalanceImpact bi) {
+        BalanceReservation br = new BalanceReservation();
+        br.setBalanceId(bi.getBalanceDetail().getBalanceId());
+        br.setReservationAmount(bi.getClearReservationAmount()); // later negate this
+        br.setCommitAmount(bi.getAmount());
         return br;
     }
     
