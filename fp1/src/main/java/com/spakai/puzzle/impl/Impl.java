@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.spakai.puzzle.datamodel.*;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Impl {
@@ -18,23 +19,20 @@ public class Impl {
                                      .stream()
                                      .collect(Collectors.toMap(
                                              bi -> bi.getBalanceDetail().getBalanceId(), 
-                                             bi -> createBalanceReservationR(bi)
+                                             this::createBalanceReservationR
                                      ));
        
-        //Map<String, Map<String, BalanceReservation>> balanceCommitsWithSubscriberId 
-        /*Map<String, BalanceReservation>> balanceCommitsWithSubscriberId 
-                = commitBalanceImpacts
-                        .stream()
-                        .map(bi -> balReservations.getOrDefault(bi.getBalanceDetail().getBalanceId(), createBalanceReservationC(bi)))
-                        .map(br -> updateBalanceReservation(br))
-
-*/
-                
-                
-                
+        Map<String, BalanceReservation> balCommits = commitBalanceImpacts
+                .stream()
+                .map(bi -> mergeOrCreateNewReservations(bi, balReservations))
+                .collect(Collectors.toMap(
+                        BalanceReservation::getBalanceId,
+                        Function.identity()
+                ));
+        
+        //next
+         //Map<String, Map<String, BalanceReservation>> balanceCommitsWithSubscriberId 
                         
-        
-        
     }
     
     
@@ -52,5 +50,20 @@ public class Impl {
         br.setCommitAmount(bi.getAmount());
         return br;
     }
+     
+     private BalanceReservation mergeOrCreateNewReservations(BalanceImpact bi, Map<String, BalanceReservation> balReservations) {
+         BalanceReservation br = balReservations.get(bi.getBalanceDetail().getBalanceId());
+         if (br == null) {
+             return createBalanceReservationC(bi);
+         } else {
+             br.setCommitAmount(bi.getAmount());
+             //br.setReservationAmount(br.getReservationAmount() - bi.getClearReservationAmount();
+             return br;
+         }
+         
+     
+     }
+     
+     
     
 }
