@@ -24,17 +24,16 @@ public class Impl {
                                              ReservationT::createBalanceReservationR
                                      ));
        
-        Map<String, BalanceReservation> balCommits = 
+        Map<String, Map<String, BalanceReservation>> balCommits = 
                                     commitBalanceImpacts
                                     .stream()
                                     .map(bi -> mergeOrCreateNewReservation(bi, balReservations))
-                                    .collect(Collectors.toMap(
+                                    .collect(Collectors.groupingBy(BalanceReservation::getSubscriberId,
+                                            Collectors.toMap(
                                         BalanceReservation::getBalanceId,
                                         Function.identity()
-                                    ));
-        //next map above to subscriberId
+                                    )));
         
-        //Map<String, Map<String, BalanceReservation>> balanceCommitsWithSubscriberId 
     }
     
     private BalanceReservation mergeOrCreateNewReservation(BalanceImpact bi, Map<String, BalanceReservation> balReservations) {
