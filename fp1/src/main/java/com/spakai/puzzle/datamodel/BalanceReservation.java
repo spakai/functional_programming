@@ -1,10 +1,19 @@
 package com.spakai.puzzle.datamodel;
 
 public class BalanceReservation {
+    private String subscriberId;
     private String balanceId;
     private String reservationAmount;
     private String commitAmount;
 
+    public String getSubscriberId() {
+        return subscriberId;
+    }
+
+    public void setSubscriberId(String subscriberId) {
+        this.subscriberId = subscriberId;
+    }
+    
     public String getBalanceId() {
         return balanceId;
     }
