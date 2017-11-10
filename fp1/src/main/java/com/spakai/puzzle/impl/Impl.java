@@ -43,6 +43,7 @@ public class Impl {
                                     .stream()
                                     .map(bi -> mergeOrCreateNewReservation(bi, balReservations))
                                     .map(br -> updateChecksum(br, checksumLookup))
+                                    .map(br -> updateDeltaMode(br))
                                     .collect(Collectors.groupingBy(
                                             BalanceReservation::getSubscriberId,
                                             Collectors.toMap(
@@ -69,11 +70,13 @@ public class Impl {
         Integer cksum = checksumLookup.get(br.getBalanceId());
         
         if (cksum == null) {
-            br.setChecksum(cksum.intValue() + 1);
+            br.setChecksum(cksum + 1);
         } 
         
         return br;
     }
     
-    
+    private BalanceReservation updateDeltaMode(BalanceReservation br) {
+        return br;
+    }
 }
