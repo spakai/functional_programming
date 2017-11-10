@@ -9,6 +9,7 @@ public  class ReservationT {
         br.setBalanceId(bi.getBalanceDetail().getBalanceId());
         br.setReservationAmount(bi.getAmount());
         br.setSubscriberId(bi.getBalanceDetail().getSubscriberId());
+        br.setChecksum(bi.getBalanceDetail().getChecksum());
         return br;
     }
     
@@ -18,6 +19,7 @@ public  class ReservationT {
         br.setReservationAmount(bi.getClearReservationAmount()); // later negate this
         br.setCommitAmount(bi.getAmount());
         br.setSubscriberId(bi.getBalanceDetail().getSubscriberId());
+        br.setChecksum(bi.getBalanceDetail().getChecksum());
         return br;
     }
     
