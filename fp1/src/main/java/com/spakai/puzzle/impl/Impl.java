@@ -4,6 +4,7 @@ import java.util.List;
 import com.spakai.puzzle.datamodel.*;
 import com.spakai.puzzle.transformer.ReservationT;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -13,9 +14,22 @@ public class Impl {
         
     }
     
-    private void processBalanceImpacts(final List<BalanceImpact> reservationBalanceImpacts, final List<BalanceImpact> commitBalanceImpacts) {
-        //Create lookup map from first list
-        // balanceId , BalanceReservation
+    private Map<String, Map<String, BalanceReservation>> processBalanceImpacts(
+            final List<BalanceImpact> reservationBalanceImpacts, 
+            final List<BalanceImpact> commitBalanceImpacts,
+            final List<BalanceDetail> previousBalanceUpdates) {
+
+        Objects.requireNonNull(reservationBalanceImpacts);
+        Objects.requireNonNull(commitBalanceImpacts);
+
+        Map<String, Integer> checksumLookup = previousBalanceUpdates
+                    .stream()
+                    .collect(Collectors.toMap(
+                        bd -> bd.getBalanceId(),
+                        bd -> bd.getChecksum()
+                ));
+        
+        
         Map<String, BalanceReservation> balReservations = 
                                     reservationBalanceImpacts
                                     .stream()
@@ -28,11 +42,15 @@ public class Impl {
                                     commitBalanceImpacts
                                     .stream()
                                     .map(bi -> mergeOrCreateNewReservation(bi, balReservations))
-                                    .collect(Collectors.groupingBy(BalanceReservation::getSubscriberId,
+                                    .map(br -> updateChecksum(br, checksumLookup))
+                                    .collect(Collectors.groupingBy(
+                                            BalanceReservation::getSubscriberId,
                                             Collectors.toMap(
-                                        BalanceReservation::getBalanceId,
-                                        Function.identity()
+                                                BalanceReservation::getBalanceId,
+                                                Function.identity()
                                     )));
+        
+        return balCommits;
         
     }
     
@@ -46,4 +64,16 @@ public class Impl {
              return br;
          }
     }
+    
+    private BalanceReservation updateChecksum(BalanceReservation br, Map<String, Integer> checksumLookup) {
+        Integer cksum = checksumLookup.get(br.getBalanceId());
+        
+        if (cksum == null) {
+            br.setChecksum(cksum.intValue() + 1);
+        } 
+        
+        return br;
+    }
+    
+    
 }

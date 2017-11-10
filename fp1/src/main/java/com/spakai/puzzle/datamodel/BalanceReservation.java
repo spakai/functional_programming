@@ -5,6 +5,15 @@ public class BalanceReservation {
     private String balanceId;
     private String reservationAmount;
     private String commitAmount;
+    private int checksum;
+
+    public int getChecksum() {
+        return checksum;
+    }
+
+    public void setChecksum(int checksum) {
+        this.checksum = checksum;
+    }
 
     public String getSubscriberId() {
         return subscriberId;

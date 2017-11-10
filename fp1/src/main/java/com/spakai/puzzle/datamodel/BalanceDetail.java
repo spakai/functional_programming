@@ -4,6 +4,15 @@ public class BalanceDetail {
     private String subscriberId;
     private String balanceId;
     private String balanceAmount;
+    private int checksum;
+
+    public int getChecksum() {
+        return checksum;
+    }
+
+    public void setChecksum(int checksum) {
+        this.checksum = checksum;
+    }
 
     public String getSubscriberId() {
         return subscriberId;
