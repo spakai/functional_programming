@@ -11,7 +11,9 @@ import java.util.stream.Collectors;
 public class Impl {
     
     public void process() {
-        
+        //processBalanceImpacts
+        //processValidityTime
+        //doReservations
     }
     
     private Map<String, Map<String, BalanceReservation>> processBalanceImpacts(
@@ -29,7 +31,6 @@ public class Impl {
                         bd -> bd.getChecksum()
                 ));
         
-        
         Map<String, BalanceReservation> balReservations = 
                                     reservationBalanceImpacts
                                     .stream()
@@ -43,7 +44,7 @@ public class Impl {
                                     .stream()
                                     .map(bi -> mergeOrCreateNewReservation(bi, balReservations))
                                     .map(br -> updateChecksum(br, checksumLookup))
-                                    .map(br -> updateDeltaMode(br))
+                                    .map(br -> updateDeltaMode(br)) //TODO
                                     .collect(Collectors.groupingBy(
                                             BalanceReservation::getSubscriberId,
                                             Collectors.toMap(
@@ -55,12 +56,45 @@ public class Impl {
         
     }
     
+    private void doReservations(Map<String, Map<String, BalanceReservation>> balCommits, List<BalanceReservation> existingSubscriberReservations) {
+        
+        for (String subscriberId : balCommits.keySet()) {
+            Map<String, BalanceReservation> futureReservations = balCommits.get(subscriberId);
+            
+            if(existingSubscriberReservations == null) {
+                createReservation(futureReservations);
+            } else  {
+                int totalReservations = 
+                        existingSubscriberReservations
+                                .stream()
+                                .map(br -> br.getReservationAmount() - br.getCommitAmount())
+                                .sum();
+                                        
+            }
+            
+            
+        }
+    }
+    
+    private void createReservation(Map<String, BalanceReservation> futureReservations) {
+        
+    }
+    
+    private void updateReservation() {
+        
+    }
+    
+    private void endReservation() {
+        
+    }
+    
+    
     private BalanceReservation mergeOrCreateNewReservation(BalanceImpact bi, Map<String, BalanceReservation> balReservations) {
         BalanceReservation br = balReservations.get(bi.getBalanceDetail().getBalanceId());
          if (br == null) {
              return ReservationT.createBalanceReservationC(bi);
          } else {
-             br.setCommitAmount(bi.getAmount());
+             //br.setCommitAmount(bi.getAmount());
              //br.setReservationAmount(br.getReservationAmount() - bi.getClearReservationAmount();
              return br;
          }
@@ -69,7 +103,7 @@ public class Impl {
     private BalanceReservation updateChecksum(BalanceReservation br, Map<String, Integer> checksumLookup) {
         Integer cksum = checksumLookup.get(br.getBalanceId());
         
-        if (cksum == null) {
+        if (cksum != null) {
             br.setChecksum(cksum + 1);
         } 
         

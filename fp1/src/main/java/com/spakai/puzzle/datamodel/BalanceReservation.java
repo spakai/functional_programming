@@ -3,8 +3,8 @@ package com.spakai.puzzle.datamodel;
 public class BalanceReservation {
     private String subscriberId;
     private String balanceId;
-    private String reservationAmount;
-    private String commitAmount;
+    private int reservationAmount;
+    private int commitAmount;
     private int checksum;
 
     public int getChecksum() {
@@ -31,19 +31,19 @@ public class BalanceReservation {
         this.balanceId = balanceId;
     }
 
-    public String getReservationAmount() {
+    public int getReservationAmount() {
         return reservationAmount;
     }
 
-    public void setReservationAmount(String reservationAmount) {
+    public void setReservationAmount(int reservationAmount) {
         this.reservationAmount = reservationAmount;
     }
 
-    public String getCommitAmount() {
+    public int getCommitAmount() {
         return commitAmount;
     }
 
-    public void setCommitAmount(String commitAmount) {
+    public void setCommitAmount(int commitAmount) {
         this.commitAmount = commitAmount;
     }
 }
